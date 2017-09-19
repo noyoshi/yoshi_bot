@@ -30,6 +30,7 @@ slack_client.api_call(
     channel = "#test",
     text = "Hello world",
     as_user = True )
+
 # ================================= Functions ================================
 
 def hasNumbers(string):
@@ -69,18 +70,47 @@ def handle_command(command, channel): # handles commands properly!
         response = str(random.randint(0,10))
     slack_client.api_call("chat.postMessage", channel=channel,
                                       text=response, as_user=True)
+def illuminati(nums_list):
+    perms = list(permutations(nums_list))
+    
+def bork(string,channel):
+    for char in string:
+        if not char.isalpha():
+            string = string.replace(char,' ')
+    string = string.strip().lower().split()
+    borks = 0 
+    found = False 
+    for word in string: 
+        if word == 'bork':
+            borks += 1
+            found = True 
+
+    if found: 
+        txt = 'bork ' * borks * 2 
+        txt = 'who let the dogs out? ' + txt
+        slack_client.api_call("chat.postMessage", channel=channel, 
+                                    text = txt, as_user = True)
+
+
+
 
 def check_illuminati(string, channel): # string works! 
     # will be implemeting the algorithm I make for Programming Challenges
     nums = []
     concat = ''
     illum = False 
-    for letter in string: 
-        if letter.isdigit():
-            concat += letter
-            nums.append(int(letter))
+    txt = '666 ILLUMINATI CONFIRMED'
     bad_letter = 666
-    if concat == str(bad_letter):
+    for char in string: 
+        if char == '6':
+            concat += char # this step checks to see if we can just concatonate 666 together
+        elif not char.isdigit():
+            string = string.replace(char,' ')
+    for letter in string.split(): 
+        nums.append(int(letter)) # appends the numbers to a number list 
+
+    if str(bad_letter) in concat:
+        txt = '6 + 6 + 6 = 666! ILLUMINATI CONFIRMED'
         illum = True 
     else:
         result = 0 
@@ -90,7 +120,7 @@ def check_illuminati(string, channel): # string works!
     print nums
     if illum:
         slack_client.api_call("chat.postMessage", channel=channel, 
-                                    text = '666 ILLUMINATI CONFIRMED', as_user = True)
+                                    text = txt, as_user = True)
 
 # ================================= Main ===============================
 if __name__ == "__main__":
@@ -105,6 +135,9 @@ if __name__ == "__main__":
                 # turns the text from unicode to a Python string 
                 if hasNumbers(string) and AT_BOT not in text: # if nums in text
                     check_illuminati(string, channel)
+                    bork(string,channel)
+                elif AT_BOT not in text: 
+                    bork(string,channel)
                 elif AT_BOT in text: # if the bot call is in the text 
                     # strips the bot call off of the text 
                     command = text.split(AT_BOT)[1].strip().lower() 
